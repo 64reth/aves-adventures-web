@@ -403,6 +403,9 @@ export default function RainbowRun() {
   return (
     <div className="rainbow-run-game">
       <h1 className="rainbow-run-title">Rainbow Run</h1>
+<p className="rainbow-run-credit">
+  Created by Taryn & Dad
+</p>
 
       <p className="rainbow-run-help">
         Move with A/D or arrows. Jump with W, up arrow, or space.

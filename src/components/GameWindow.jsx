@@ -1,11 +1,13 @@
 import CakeMatcher from "../games/CakeMatcher";
 import BobaCatch from "../games/BobaCatch";
 import RainbowRun from "../games/RainbowRun";
+import PancakePanic from "../games/PancakePanic";
 
 const games = {
   "cake-matcher": CakeMatcher,
   "boba-catch": BobaCatch,
   "rainbow-run": RainbowRun,
+  "pancake-panic": PancakePanic,
 };
 
 export default function GameWindow({ gameId, onClose }) {
