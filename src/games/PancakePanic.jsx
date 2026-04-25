@@ -19,6 +19,21 @@ export default function PancakePanic() {
     const bg = new Image();
     bg.src = "/assets/games/pancake-panic-bg.png";
 
+    const pancakeSprite = new Image();
+    pancakeSprite.src = "/assets/characters/pancake/pancake-sprite-sheet.png";
+
+    const logImg = new Image();
+    logImg.src = "/assets/games/pancake-panic/log-obstacle.png";
+
+    const cactusImg = new Image();
+    cactusImg.src = "/assets/games/pancake-panic/cactus-obstacle.png";
+
+    const boulderImg = new Image();
+    boulderImg.src = "/assets/games/pancake-panic/boulder-obstacle.png";
+
+    const syrupImg = new Image();
+    syrupImg.src = "/assets/games/pancake-panic/syrup-reward.png";
+
     const game = {
       frame: 0,
       score: 0,
@@ -40,20 +55,32 @@ export default function PancakePanic() {
     gameRef.current = game;
 
     const spawnObstacle = () => {
+      const types = [
+        { name: "log", img: logImg, w: 115, h: 58 },
+        { name: "cactus", img: cactusImg, w: 65, h: 92 },
+        { name: "boulder", img: boulderImg, w: 88, h: 70 },
+      ];
+
+      const picked = types[Math.floor(Math.random() * types.length)];
+
       game.obstacles.push({
         x: 170 + Math.random() * 330,
-        y: -60,
-        w: 50,
-        h: 50,
-        type: Math.random() > 0.5 ? "🪨" : "🌵",
+        y: -110,
+        w: picked.w,
+        h: picked.h,
+        img: picked.img,
+        type: picked.name,
       });
     };
 
     const spawnSyrup = () => {
       game.syrup.push({
         x: 180 + Math.random() * 320,
-        y: -40,
-        r: 18,
+        y: -70,
+        w: 58,
+        h: 58,
+        collected: false,
+        img: syrupImg,
       });
     };
 
@@ -63,18 +90,10 @@ export default function PancakePanic() {
       a.y < b.y + b.h &&
       a.y + a.h > b.y;
 
-    const circleHit = (p, s) => {
-      const closestX = Math.max(p.x, Math.min(s.x, p.x + p.w));
-      const closestY = Math.max(p.y, Math.min(s.y, p.y + p.h));
-      const dx = s.x - closestX;
-      const dy = s.y - closestY;
-      return dx * dx + dy * dy < s.r * s.r;
-    };
-
     const update = () => {
       if (game.status !== "playing") return;
 
-      game.frame++;
+      game.frame += 1;
       game.invincible = Math.max(0, game.invincible - 1);
       game.bgScroll += game.speed;
 
@@ -93,7 +112,24 @@ export default function PancakePanic() {
       for (const drop of game.syrup) drop.y += game.speed + 1;
 
       for (const obs of game.obstacles) {
-        if (game.invincible === 0 && rectHit(game.player, obs)) {
+        const playerHitbox = {
+          x: game.player.x + 14,
+          y: game.player.y + 12,
+          w: game.player.w - 28,
+          h: game.player.h - 22,
+        };
+
+        const obstacleHitbox = {
+          x: obs.x + obs.w * 0.12,
+          y: obs.y + obs.h * 0.12,
+          w: obs.w * 0.76,
+          h: obs.h * 0.76,
+        };
+
+        if (
+          game.invincible === 0 &&
+          rectHit(playerHitbox, obstacleHitbox)
+        ) {
           game.hearts -= 1;
           game.invincible = 90;
           setHearts(game.hearts);
@@ -106,10 +142,10 @@ export default function PancakePanic() {
       }
 
       for (const drop of game.syrup) {
-        if (!drop.collected && circleHit(game.player, drop)) {
+        if (!drop.collected && rectHit(game.player, drop)) {
           drop.collected = true;
           game.score += 5;
-          setScore(game.score);
+          setScore(Math.floor(game.score));
 
           if (game.score % 25 === 0) {
             game.speed += 0.3;
@@ -125,8 +161,10 @@ export default function PancakePanic() {
         setStatus("won");
       }
 
-      game.obstacles = game.obstacles.filter((o) => o.y < canvas.height + 80);
-      game.syrup = game.syrup.filter((s) => s.y < canvas.height + 60 && !s.collected);
+      game.obstacles = game.obstacles.filter((o) => o.y < canvas.height + 120);
+      game.syrup = game.syrup.filter(
+        (s) => s.y < canvas.height + 90 && !s.collected
+      );
     };
 
     const drawBackground = () => {
@@ -141,6 +179,15 @@ export default function PancakePanic() {
       }
     };
 
+    const drawImageOrFallback = (img, fallback, x, y, w, h) => {
+      if (img && img.complete && img.naturalWidth > 0) {
+        ctx.drawImage(img, x, y, w, h);
+      } else {
+        ctx.font = `${Math.max(32, h)}px sans-serif`;
+        ctx.fillText(fallback, x, y + h);
+      }
+    };
+
     const drawPlayer = () => {
       const p = game.player;
 
@@ -150,10 +197,48 @@ export default function PancakePanic() {
         ctx.globalAlpha = 0.45;
       }
 
-      ctx.font = "76px sans-serif";
-      ctx.fillText("🥞", p.x, p.y + 70);
+      if (pancakeSprite.complete && pancakeSprite.naturalWidth > 0) {
+        const cols = 3;
+        const rows = 2;
+        const frameWidth = pancakeSprite.width / cols;
+        const frameHeight = pancakeSprite.height / rows;
+
+        const frame = Math.floor(game.frame / 8) % 6;
+        const frameX = frame % cols;
+        const frameY = Math.floor(frame / cols);
+
+        ctx.drawImage(
+          pancakeSprite,
+          frameX * frameWidth,
+          frameY * frameHeight,
+          frameWidth,
+          frameHeight,
+          p.x - 8,
+          p.y - 18,
+          95,
+          90
+        );
+      } else {
+        ctx.font = "76px sans-serif";
+        ctx.fillText("🥞", p.x, p.y + 70);
+      }
 
       ctx.restore();
+    };
+
+    const drawHud = () => {
+      const displayScore = String(Math.floor(game.score)).padStart(3, "0");
+
+      ctx.font = "bold 28px sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.strokeStyle = "#3b2a4a";
+      ctx.lineWidth = 4;
+
+      ctx.strokeText(`Score: ${displayScore}`, 24, 40);
+      ctx.fillText(`Score: ${displayScore}`, 24, 40);
+
+      ctx.strokeText(`Hearts: ${"💛".repeat(game.hearts)}`, 230, 40);
+      ctx.fillText(`Hearts: ${"💛".repeat(game.hearts)}`, 230, 40);
     };
 
     const draw = () => {
@@ -162,27 +247,18 @@ export default function PancakePanic() {
       drawBackground();
 
       for (const drop of game.syrup) {
-        ctx.font = "34px sans-serif";
-        ctx.fillText("🍯", drop.x, drop.y);
+        drawImageOrFallback(drop.img, "🍯", drop.x, drop.y, drop.w, drop.h);
       }
 
       for (const obs of game.obstacles) {
-        ctx.font = "42px sans-serif";
-        ctx.fillText(obs.type, obs.x, obs.y);
+        const fallback =
+          obs.type === "cactus" ? "🌵" : obs.type === "log" ? "🪵" : "🪨";
+
+        drawImageOrFallback(obs.img, fallback, obs.x, obs.y, obs.w, obs.h);
       }
 
       drawPlayer();
-
-      ctx.font = "bold 28px sans-serif";
-ctx.fillStyle = "#ffffff";
-ctx.strokeStyle = "#3b2a4a";
-ctx.lineWidth = 4;
-
-ctx.strokeText(`Score: ${Math.floor(game.score)}`, 24, 40);
-ctx.fillText(`Score: ${Math.floor(game.score)}`, 24, 40);
-
-ctx.strokeText(`Hearts: ${"💛".repeat(game.hearts)}`, 210, 40);
-ctx.fillText(`Hearts: ${"💛".repeat(game.hearts)}`, 210, 40);
+      drawHud();
 
       if (game.status === "won" || game.status === "lost") {
         ctx.fillStyle = "rgba(255,255,255,0.86)";
@@ -269,13 +345,15 @@ ctx.fillText(`Hearts: ${"💛".repeat(game.hearts)}`, 210, 40);
   return (
     <div className="rainbow-run-game">
       <h1 className="rainbow-run-title">Pancake Panic</h1>
+
       <p className="rainbow-run-help">
         Move with W/A/S/D or arrows. Dodge obstacles and collect syrup!
       </p>
 
       <div className="rainbow-run-hud">
-        <div>Score: {score}</div>
+        <div>Score: {String(score).padStart(3, "0")}</div>
         <div>Hearts: {"💛".repeat(hearts)}</div>
+
         <button
           type="button"
           onClick={(e) => {
