@@ -961,10 +961,13 @@ body {
   opacity: 0.9;
 }
 
+
+/* CHARACTERS PAGE */
+
 .characters-page {
   position: relative;
   min-height: 100vh;
-  padding: 34px 18px 80px;
+  padding: 34px 18px 100px;
   background:
     radial-gradient(circle at 10% 10%, rgba(255, 143, 216, 0.55), transparent 28%),
     radial-gradient(circle at 90% 20%, rgba(129, 220, 255, 0.55), transparent 30%),
@@ -1022,9 +1025,8 @@ body {
 .characters-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 18px;
+  gap: 22px;
   align-items: stretch;
-  padding-bottom: 80px;
 }
 
 .character-card {
@@ -1064,12 +1066,9 @@ body {
   background:
     radial-gradient(circle at center, white 0%, var(--character-colour) 50%, #7dd3fc 100%);
   overflow: hidden;
-  position: relative;
 }
 
 .character-image-wrap img {
-  position: relative;
-  z-index: 2;
   max-width: 88%;
   max-height: 96%;
   object-fit: contain;
@@ -1121,7 +1120,7 @@ body {
   cursor: pointer;
 }
 
-/* Character Modal */
+/* CHARACTER MODAL */
 
 .character-showcase-backdrop {
   position: fixed;
@@ -1171,20 +1170,6 @@ body {
   cursor: pointer;
 }
 
-.showcase-sparkles span {
-  position: absolute;
-  z-index: 4;
-  font-size: 1.3rem;
-  color: #fff;
-  filter: drop-shadow(0 0 10px var(--character-colour));
-  animation: sparklePulse 1.8s ease-in-out infinite;
-}
-
-.showcase-sparkles span:nth-child(1) { left: 8%; top: 12%; }
-.showcase-sparkles span:nth-child(2) { left: 42%; top: 8%; animation-delay: 0.4s; }
-.showcase-sparkles span:nth-child(3) { right: 12%; bottom: 14%; animation-delay: 0.8s; }
-.showcase-sparkles span:nth-child(4) { left: 30%; bottom: 10%; animation-delay: 1.2s; }
-
 .showcase-info {
   grid-area: info;
   position: relative;
@@ -1194,7 +1179,6 @@ body {
 
 .showcase-image {
   grid-area: image;
-  min-height: 320px;
   height: 320px;
   display: grid;
   place-items: center;
@@ -1271,6 +1255,20 @@ body {
   font-weight: 1000;
 }
 
+.showcase-sparkles span {
+  position: absolute;
+  z-index: 4;
+  font-size: 1.3rem;
+  color: #fff;
+  filter: drop-shadow(0 0 10px var(--character-colour));
+  animation: sparklePulse 1.8s ease-in-out infinite;
+}
+
+.showcase-sparkles span:nth-child(1) { left: 8%; top: 12%; }
+.showcase-sparkles span:nth-child(2) { left: 42%; top: 8%; animation-delay: 0.4s; }
+.showcase-sparkles span:nth-child(3) { right: 12%; bottom: 14%; animation-delay: 0.8s; }
+.showcase-sparkles span:nth-child(4) { left: 30%; bottom: 10%; animation-delay: 1.2s; }
+
 @media (max-width: 780px) {
   .character-showcase-backdrop {
     align-items: flex-start;
@@ -1292,7 +1290,6 @@ body {
 
   .showcase-image {
     height: 240px;
-    min-height: 240px;
   }
 
   .showcase-image img {
@@ -1313,26 +1310,15 @@ body {
 }
 
 @keyframes floatAround {
-  0%, 100% {
-    transform: translateY(0) translateX(0) rotate(0deg);
-  }
-
-  50% {
-    transform: translateY(-28px) translateX(18px) rotate(8deg);
-  }
+  0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
+  50% { transform: translateY(-28px) translateX(18px) rotate(8deg); }
 }
 
 @keyframes sparklePulse {
-  0%, 100% {
-    opacity: 0.45;
-    transform: scale(0.8) rotate(0deg);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.25) rotate(16deg);
-  }
+  0%, 100% { opacity: 0.45; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.25) rotate(16deg); }
 }
+
 
 .page-transition {
   animation: pagePopFade 0.35s ease both;
@@ -1957,35 +1943,4 @@ body {
   .shop-subtitle {
     font-size: 0.98rem;
   }
-}
-
-/* HARD FIX: show all character cards */
-
-.characters-page {
-  min-height: unset !important;
-  height: auto !important;
-  overflow: visible !important;
-  padding-bottom: 120px !important;
-}
-
-.characters-panel {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-.characters-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)) !important;
-  gap: 22px !important;
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-.character-card {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  position: relative !important;
 }
