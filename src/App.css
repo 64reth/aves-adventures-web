@@ -2486,3 +2486,39 @@ body {
 .site-footer p {
   margin: 0;
 }
+
+/* FINAL MOBILE POLISH */
+
+@media (max-width: 640px) {
+  .site-header {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .site-logo {
+    height: 52px;
+  }
+
+  .site-nav {
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .nav-button {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .site-footer {
+    padding: 18px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .game-window,
+  .book-modal,
+  .character-showcase {
+    width: 96vw;
+    max-width: 96vw;
+  }
+}
