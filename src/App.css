@@ -2522,3 +2522,26 @@ body {
     max-width: 96vw;
   }
 }
+
+/* PREMIUM FOOTER */
+
+.site-footer {
+  padding: 28px 18px;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,241,248,0.96));
+  border-top: 2px solid #ffd8ea;
+  color: #6c437d;
+}
+
+.site-footer p {
+  margin: 0;
+  font-weight: 900;
+}
+
+.site-footer small {
+  display: block;
+  margin-top: 8px;
+  opacity: 0.75;
+  font-weight: 700;
+}

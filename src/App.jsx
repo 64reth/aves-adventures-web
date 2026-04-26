@@ -71,11 +71,9 @@ export default function App() {
       </main>
 
       <footer className="site-footer">
-        <p>
-          © {new Date().getFullYear()} Ave’s Adventures. Stories, games and
-          characters by Taryn.
-        </p>
-      </footer>
+  <p>© {new Date().getFullYear()} Ave’s Adventures</p>
+  <small>Stories, games and characters by Taryn ✨</small>
+</footer>
     </div>
   );
 }
