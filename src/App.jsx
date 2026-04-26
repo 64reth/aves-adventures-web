@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Home from "./pages/Home";
 import Books from "./pages/Books";
 import Adventures from "./pages/Adventures";
@@ -26,7 +26,14 @@ const navItems = [
 ];
 
 export default function App() {
-  const [activePage, setActivePage] = useState("home");
+  const [activePage, setActivePage] = useState(() => {
+    const savedPage = localStorage.getItem("aves-active-page");
+    return pages[savedPage] ? savedPage : "home";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("aves-active-page", activePage);
+  }, [activePage]);
 
   return (
     <div className="app">
@@ -52,7 +59,11 @@ export default function App() {
         </nav>
       </header>
 
-      <main className="site-main">{pages[activePage]}</main>
+      <main className="site-main">
+        <div key={activePage} className="page-transition">
+          {pages[activePage]}
+        </div>
+      </main>
     </div>
   );
 }
