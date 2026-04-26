@@ -8,6 +8,7 @@ const games = [
     image: "/assets/characters/cake/cake-character.png",
     bg: "/assets/games/cake-matcher-bg.png",
     gameId: "cake-matcher",
+    badge: "NEW",
   },
   {
     title: "Rainbow Run",
@@ -15,6 +16,7 @@ const games = [
     image: "/assets/characters/ave/ave-character.png",
     bg: "/assets/games/rainbow-run-bg.png",
     gameId: "rainbow-run",
+    badge: "HOT",
   },
   {
     title: "Boba Catch",
@@ -22,6 +24,7 @@ const games = [
     image: "/assets/characters/boba/boba-character.png",
     bg: "/assets/games/boba-catch-bg.png",
     gameId: "boba-catch",
+    badge: "FUN",
   },
   {
     title: "Pancake Panic",
@@ -29,6 +32,7 @@ const games = [
     image: "/assets/characters/pancake/pancake-character.png",
     bg: "/assets/games/pancake-panic-bg.png",
     gameId: "pancake-panic",
+    badge: "FAST",
   },
 ];
 
@@ -37,13 +41,19 @@ export default function Adventures() {
 
   return (
     <div className="adventures-page">
-      <section className="adventure-panel">
-        <h1>Adventures</h1>
-        <p>Pick a game and jump into Ave’s world.</p>
+      <section className="adventure-hero">
+        <div className="adventure-hero-overlay">
+          <h1>Arcade Adventures</h1>
+          <p>Choose a game and play in Ave’s magical arcade world ✨</p>
+        </div>
+      </section>
 
+      <section className="adventure-panel">
         <div className="game-grid">
           {games.map((game) => (
             <article className="game-card" key={game.title}>
+              <span className="game-badge">{game.badge}</span>
+
               <div
                 className="game-image-wrap"
                 style={{ backgroundImage: `url(${game.bg})` }}
@@ -51,11 +61,17 @@ export default function Adventures() {
                 <img src={game.image} alt={game.title} />
               </div>
 
-              <h3>{game.title}</h3>
-              <p>{game.text}</p>
-              <button type="button" onClick={() => setActiveGame(game.gameId)}>
-                🎮 Play
-              </button>
+              <div className="game-card-content">
+                <h3>{game.title}</h3>
+                <p>{game.text}</p>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveGame(game.gameId)}
+                >
+                  🎮 Play Now
+                </button>
+              </div>
             </article>
           ))}
         </div>

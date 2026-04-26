@@ -22,9 +22,17 @@ export default function App() {
     return navItems.some((item) => item.id === savedPage) ? savedPage : "home";
   });
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     localStorage.setItem("aves-active-page", activePage);
+    setMenuOpen(false);
   }, [activePage]);
+
+  const goToPage = (page) => {
+    setActivePage(page);
+    setMenuOpen(false);
+  };
 
   const pages = {
     home: <Home onNavigate={setActivePage} />,
@@ -41,7 +49,7 @@ export default function App() {
         <button
           type="button"
           className="brand-button"
-          onClick={() => setActivePage("home")}
+          onClick={() => goToPage("home")}
         >
           <img
             src="/assets/brand/aves-adventures-logo-main.png"
@@ -50,13 +58,24 @@ export default function App() {
           />
         </button>
 
-        <nav className="site-nav">
+        <button
+          type="button"
+          className={`menu-toggle ${menuOpen ? "open" : ""}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav className={`site-nav ${menuOpen ? "open" : ""}`}>
           {navItems.map((item) => (
             <button
               type="button"
               key={item.id}
               className={`nav-button ${activePage === item.id ? "active" : ""}`}
-              onClick={() => setActivePage(item.id)}
+              onClick={() => goToPage(item.id)}
             >
               {item.label}
             </button>
@@ -71,9 +90,9 @@ export default function App() {
       </main>
 
       <footer className="site-footer">
-  <p>© {new Date().getFullYear()} Ave’s Adventures</p>
-  <small>Stories, games and characters by Taryn ✨</small>
-</footer>
+        <p>© {new Date().getFullYear()} Ave’s Adventures</p>
+        <small>Stories, games and characters by Taryn ✨</small>
+      </footer>
     </div>
   );
 }

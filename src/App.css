@@ -21,22 +21,23 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  padding: 14px 28px;
+  gap: 14px;
+  padding: 8px 18px;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
   border-bottom: 2px solid #ffd8ea;
 }
 
 .brand-button,
-.nav-button {
+.nav-button,
+.menu-toggle {
   border: none;
   background: none;
   cursor: pointer;
 }
 
 .site-logo {
-  height: 72px;
+  height: 54px;
   width: auto;
   display: block;
 }
@@ -44,14 +45,14 @@ body {
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .nav-button {
-  padding: 10px 16px;
+  padding: 9px 14px;
   border-radius: 999px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
   color: #6c437d;
   transition: 0.2s ease;
@@ -65,6 +66,78 @@ body {
   background: #f23b91;
   color: white;
   box-shadow: 0 8px 18px rgba(242, 59, 145, 0.2);
+}
+
+/* HAMBURGER */
+
+.menu-toggle {
+  width: 44px;
+  height: 44px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 3px;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: #6c437d;
+  transition: 0.25s ease;
+}
+
+.menu-toggle.open span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.open span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+  .site-header {
+    padding: 8px 14px;
+  }
+
+  .site-logo {
+    height: 48px;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .site-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    background: rgba(255,255,255,0.97);
+    border-bottom: 2px solid #ffd8ea;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.08);
+  }
+
+  .site-nav.open {
+    display: flex;
+  }
+
+  .nav-button {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+  }
 }
 
 .site-main {
@@ -233,44 +306,95 @@ body {
   font-weight: 800;
 }
 
-.adventure-panel {
-  margin-top: 28px;
-  padding: 28px;
-  border-radius: 32px;
+.adventures-page {
+  padding: 18px;
+}
+
+/* HERO */
+
+.adventure-hero {
+  min-height: 280px;
+  border-radius: 34px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(60, 20, 90, 0.25), rgba(60, 20, 90, 0.25)),
+    url("/assets/backgrounds/arcade-room-bg.png");
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 18px 40px rgba(209, 84, 145, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adventure-hero-overlay {
   text-align: center;
+  padding: 24px;
+}
+
+.adventure-hero h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  color: white;
+  font-weight: 1000;
+  text-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+.adventure-hero p {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: white;
+}
+
+/* PANEL */
+
+.adventure-panel {
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 32px;
   background: linear-gradient(180deg, #ffe4f1, #fff8fc);
   box-shadow: 0 12px 28px rgba(209, 84, 145, 0.12);
 }
 
-.adventure-panel h2 {
-  margin: 0;
-  font-size: clamp(30px, 4vw, 48px);
-  color: #7d3da3;
-}
-
-.adventure-panel > p {
-  margin: 8px 0 24px;
-  font-size: 18px;
-  font-weight: 800;
-  color: #5b316b;
-}
+/* GRID */
 
 .game-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 22px;
 }
 
 .game-card {
+  position: relative;
   overflow: hidden;
-  border-radius: 24px;
+  border-radius: 26px;
   background: white;
-  box-shadow: 0 10px 20px rgba(209, 84, 145, 0.12);
+  box-shadow: 0 14px 30px rgba(209, 84, 145, 0.14);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 22px 44px rgba(209, 84, 145, 0.22);
+}
+
+.game-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f23b91;
+  color: white;
+  font-size: 12px;
+  font-weight: 1000;
 }
 
 .game-image-wrap {
-  height: 210px;
-  border-radius: 22px 22px 0 0;
+  height: 220px;
+  border-radius: 26px 26px 0 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -280,129 +404,82 @@ body {
 
 .game-image-wrap img {
   position: absolute;
-  bottom: 8px;
+  z-index: 2;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 72%;
+  width: 74%;
   height: auto;
-  max-height: 85%;
+  max-height: 88%;
   object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,0.18));
 }
 
-.game-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.game-card-content {
+  padding: 18px 16px 20px;
+  text-align: center;
 }
 
 .game-card h3 {
-  margin: 14px 12px 8px;
+  margin: 0 0 8px;
   color: #f23b91;
-  font-size: 24px;
+  font-size: 1.45rem;
+  font-weight: 1000;
 }
 
 .game-card p {
-  min-height: 44px;
-  margin: 0 16px 14px;
+  min-height: 48px;
+  margin: 0 0 16px;
   color: #5b316b;
   font-weight: 800;
+  line-height: 1.35;
 }
 
 .game-card button {
-  margin-bottom: 18px;
-  padding: 10px 24px;
-}
-
-.view-all-btn {
-  margin-top: 24px;
-  background: white;
-  color: #f23b91;
-  border: 2px solid #f23b91;
-  box-shadow: none;
-}
-
-.home-link-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 22px;
-  margin-top: 28px;
-  padding: 26px;
-  border-radius: 30px;
-  background: #fff0dd;
-}
-
-.home-link-strip article {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 14px;
-  align-items: center;
-}
-
-.home-link-strip span {
-  grid-row: span 3;
-  font-size: 42px;
-}
-
-.home-link-strip h3 {
-  margin: 0;
-  color: #f23b91;
-}
-
-.home-link-strip p {
-  margin: 4px 0;
-  color: #5b316b;
-  font-weight: 700;
-}
-
-.home-link-strip button {
-  width: fit-content;
+  width: 100%;
+  padding: 12px;
   border: none;
-  background: none;
-  color: #f23b91;
-  font-weight: 900;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f23b91, #7d3da3);
+  color: white;
+  font-weight: 1000;
+  font-size: 0.95rem;
   cursor: pointer;
 }
 
+/* RESPONSIVE */
+
 @media (max-width: 1000px) {
-  .home-hero-card {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-characters {
-    min-height: 320px;
-  }
-
-  .hero-ave-img {
-    left: 10%;
-    width: 48%;
-  }
-
-  .hero-cake-img {
-    right: 14%;
-    width: 28%;
-  }
-
-  .game-grid,
-  .home-link-strip {
+  .game-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
-  .home-page {
-    padding: 16px;
+  .adventures-page {
+    padding: 14px;
   }
 
-  .home-hero-card,
-  .adventure-panel,
-  .home-link-strip {
+  .adventure-hero,
+  .adventure-panel {
     border-radius: 24px;
-    padding: 22px;
   }
 
-  .game-grid,
-  .home-link-strip {
+  .adventure-panel {
+    padding: 18px;
+  }
+
+  .adventure-hero {
+    min-height: 220px;
+  }
+
+  .game-grid {
     grid-template-columns: 1fr;
+  }
+
+  .game-image-wrap {
+    height: 210px;
   }
 }
 
