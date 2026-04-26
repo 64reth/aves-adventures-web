@@ -5,46 +5,88 @@ const books = [
     title: "The Bad Pancake",
     image: "/assets/books/bad-pancake-cover.png",
     colour: "#fbbf24",
-    blurb:
-      "A mischievous pancake causes chaos in a sweet and funny adventure.",
-    full:
-      "A playful story full of laughs, surprises and silly trouble. Perfect for readers who love funny characters and exciting moments.",
-  },
-  {
-    title: "The Crazy Taco",
-    image: "/assets/books/the-crazy-taco-cover.png",
-    colour: "#fb7185",
-    blurb:
-      "A wild taco arrives at dinner and turns the house upside down.",
-    full:
-      "What starts as taco night becomes a hilarious adventure. Full of energy, mess and lovable chaos.",
+    short: "A wild pancake causes chaos wherever he goes.",
+    description:
+      "Meet Pancake, a funny and energetic friend who always means well... but somehow leaves a mess behind.",
+    link: "#",
+    previewPages: [
+      "/assets/books/bad-pancake-page1.png",
+      "/assets/books/bad-pancake-page2.png",
+    ],
   },
   {
     title: "The Gift of the Boba Tea",
     image: "/assets/books/gift-of-the-boba-tea-cover.png",
-    colour: "#38bdf8",
-    blurb:
-      "Ave discovers a magical boba tea who becomes her first true friend.",
-    full:
-      "A warm story about friendship, comfort and connection. Boba brings joy wherever he goes and reminds us how special friendship can be.",
+    colour: "#f9a8d4",
+    short: "A magical gift becomes Ave’s first special friend.",
+    description:
+      "When Adam gives Ave a mysterious present, something amazing happens. Add water... and Boba comes to life!",
+    link: "#",
+    previewPages: [
+      "/assets/books/bob-tea-page1.png",
+      "/assets/books/boba-tea-page2.png",
+    ],
+  },
+  {
+    title: "The Crazy Taco",
+    image: "/assets/books/the-crazy-taco-cover.png",
+    colour: "#fb923c",
+    short: "A taco with too much energy tries to help.",
+    description:
+      "Taco is funny, fast and full of ideas. But every time he helps around the house, things get wonderfully out of control.",
+    link: "#",
+    previewPages: [
+      "/assets/books/crazy-taco-page1.png",
+      "/assets/books/crazy-taco-page2.png",
+    ],
   },
 ];
 
 export default function Books() {
   const [selectedBook, setSelectedBook] = useState(null);
+  const [previewPageIndex, setPreviewPageIndex] = useState(0);
+  const [flipKey, setFlipKey] = useState(0);
+
+  const openBook = (book) => {
+    setSelectedBook(book);
+    setPreviewPageIndex(0);
+    setFlipKey(0);
+  };
+
+  const closeBook = () => {
+    setSelectedBook(null);
+    setPreviewPageIndex(0);
+    setFlipKey(0);
+  };
+
+  const changePage = (direction) => {
+    if (!selectedBook) return;
+
+    const pageCount = selectedBook.previewPages.length;
+
+    setPreviewPageIndex((current) => {
+      if (direction === "next") {
+        return (current + 1) % pageCount;
+      }
+
+      return (current - 1 + pageCount) % pageCount;
+    });
+
+    setFlipKey((current) => current + 1);
+  };
 
   return (
     <div className="books-page">
       <div className="books-floaters">
         <span>📚</span>
-        <span>⭐</span>
         <span>✨</span>
         <span>🌈</span>
+        <span>⭐</span>
       </div>
 
       <section className="books-panel">
         <h1>Books</h1>
-        <p>Stories created from imagination, love and adventure.</p>
+        <p>Tap a story to read more and preview pages.</p>
 
         <div className="books-grid">
           {books.map((book) => (
@@ -58,12 +100,9 @@ export default function Books() {
               </div>
 
               <h3>{book.title}</h3>
-              <p>{book.blurb}</p>
+              <p>{book.short}</p>
 
-              <button
-                type="button"
-                onClick={() => setSelectedBook(book)}
-              >
+              <button type="button" onClick={() => openBook(book)}>
                 Read More ✨
               </button>
             </article>
@@ -72,34 +111,81 @@ export default function Books() {
       </section>
 
       {selectedBook && (
-        <div
-          className="book-modal-backdrop"
-          onClick={() => setSelectedBook(null)}
-        >
+        <div className="book-modal-backdrop" onClick={closeBook}>
           <div
-            className="book-modal"
+            className="book-modal book-page-turn-modal"
             style={{ "--book-colour": selectedBook.colour }}
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              className="book-close"
-              onClick={() => setSelectedBook(null)}
-            >
+            <button type="button" className="book-close" onClick={closeBook}>
               ✕
             </button>
 
-            <div className="book-modal-cover">
-              <img
-                src={selectedBook.image}
-                alt={selectedBook.title}
-              />
+            <div className="book-modal-topline">
+              <div className="book-cover-mini">
+                <img src={selectedBook.image} alt={selectedBook.title} />
+              </div>
+
+              <div className="book-modal-heading">
+                <span className="book-label">Story Preview</span>
+                <h2>{selectedBook.title}</h2>
+                <p>{selectedBook.description}</p>
+              </div>
             </div>
 
-            <div className="book-modal-info">
-              <p className="book-label">Story Book</p>
-              <h2>{selectedBook.title}</h2>
-              <p>{selectedBook.full}</p>
+            <div className="book-page-stage">
+              <button
+                type="button"
+                className="book-page-arrow left"
+                onClick={() => changePage("prev")}
+                aria-label="Previous preview page"
+              >
+                ‹
+              </button>
+
+              <div className="book-page-frame">
+                <img
+                  key={flipKey}
+                  src={selectedBook.previewPages[previewPageIndex]}
+                  alt={`${selectedBook.title} preview page ${
+                    previewPageIndex + 1
+                  }`}
+                  className="book-preview-page-active"
+                />
+              </div>
+
+              <button
+                type="button"
+                className="book-page-arrow right"
+                onClick={() => changePage("next")}
+                aria-label="Next preview page"
+              >
+                ›
+              </button>
             </div>
+
+            <div className="book-page-controls">
+              <button type="button" onClick={() => changePage("prev")}>
+                Previous Page
+              </button>
+
+              <span>
+                Page {previewPageIndex + 1} of {selectedBook.previewPages.length}
+              </span>
+
+              <button type="button" onClick={() => changePage("next")}>
+                Next Page
+              </button>
+            </div>
+
+            <a
+              className="shop-button"
+              href={selectedBook.link}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View on Amazon
+            </a>
           </div>
         </div>
       )}
