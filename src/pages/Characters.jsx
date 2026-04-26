@@ -29,7 +29,7 @@ const characters = [
   role: "The Heart of Friendship",
   image: "/assets/characters/boba/boba-character.png",
   colour: "#f6ad55",
-  short: "Ave’s first friend and a symbol of love, comfort and connection.",
+  short: "Ave’s first  magical friend",
   details:
     "Boba came to life in Ave’s very first adventure and became her first magical friend. He represents the pure joy of friendship, the bonds we build with people we care about, and the comfort of knowing someone special is by your side. His presence lights up every room, and when he is away he is deeply missed.",
   likes: [

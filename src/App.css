@@ -1517,3 +1517,292 @@ body {
 .showcase-sparkles span {
   font-size: 1.3rem;
 }
+
+.characters-grid {
+  align-items: stretch;
+}
+
+.character-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.character-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.character-card-content p {
+  min-height: 72px;
+}
+
+.character-card button {
+  margin-top: auto;
+}
+
+/* Lock all modals to same size */
+
+/*.character-showcase {
+  width: min(760px, 92vw);
+  height: 420px;
+  max-height: 420px;
+  overflow: hidden;
+}*/
+
+.showcase-info {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Nice scrollbar */
+.showcase-info::-webkit-scrollbar {
+  width: 8px;
+}
+
+.showcase-info::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.35);
+  border-radius: 999px;
+}
+
+/* Lock all modals to same size, but keep enough room for profile text */
+
+.character-showcase {
+  width: min(820px, 94vw);
+  height: min(620px, 86vh);
+  max-height: 86vh;
+  overflow: hidden;
+}
+
+.showcase-info {
+  height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.showcase-image {
+  min-height: 100%;
+}
+
+.showcase-image img {
+  max-height: 420px;
+}
+
+/* Fix modal content alignment */
+
+.character-showcase {
+  width: min(820px, 94vw);
+  min-height: 520px;
+  max-height: 88vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start; /* key fix */
+}
+
+.showcase-info {
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+  padding-top: 8px;
+}
+
+.showcase-image {
+  align-self: start;
+  min-height: 340px;
+}
+
+.showcase-image img {
+  max-height: 340px;
+}
+
+.showcase-label {
+  margin-bottom: 10px;
+}
+
+.showcase-info h2 {
+  margin: 0 0 8px;
+}
+
+.showcase-info h3 {
+  margin: 0 0 14px;
+}
+
+.showcase-age {
+  margin-bottom: 14px;
+}
+
+.character-likes {
+  margin-top: 16px;
+  padding-bottom: 10px;
+}
+/* Fix character modal clipping */
+
+.character-showcase {
+  height: auto;
+  min-height: 520px;
+  max-height: 88vh;
+  overflow: visible;
+  align-items: stretch;
+}
+
+.showcase-info {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.showcase-image {
+  min-height: 360px;
+}
+
+.showcase-image img {
+  max-height: 360px;
+}
+
+.character-showcase-backdrop {
+  overflow-y: auto;
+}
+
+.character-likes {
+  margin-top: 16px;
+  padding-bottom: 8px;
+}
+/* CHARACTER MODAL RESET + RESPONSIVE FIX */
+
+.character-showcase-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  overflow-y: auto;
+}
+
+.character-showcase {
+  width: min(900px, 96vw);
+  max-height: 88vh;
+  min-height: unset;
+  height: auto;
+  overflow-y: auto;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "info image";
+  gap: 22px;
+
+  padding: 26px;
+  border-radius: 32px;
+  align-items: start;
+}
+
+.showcase-info {
+  grid-area: info;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  align-self: start;
+  justify-self: stretch;
+  padding: 0;
+  text-align: left;
+}
+
+.showcase-image {
+  grid-area: image;
+  min-height: 320px;
+  height: 320px;
+  align-self: start;
+}
+
+.showcase-image img {
+  max-height: 300px;
+  max-width: 90%;
+}
+
+.showcase-info h2 {
+  margin: 0 0 8px;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+}
+
+.showcase-info h3 {
+  margin: 0 0 12px;
+}
+
+.showcase-age {
+  margin-bottom: 14px;
+}
+
+.showcase-info p {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.character-likes {
+  margin-top: 14px;
+  padding-bottom: 8px;
+}
+
+/* Mobile modal layout */
+
+@media (max-width: 780px) {
+  .character-showcase-backdrop {
+    align-items: flex-start;
+    padding: 14px;
+  }
+
+  .character-showcase {
+    width: 96vw;
+    max-height: none;
+    min-height: unset;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "image"
+      "info";
+
+    gap: 16px;
+    padding: 18px;
+    border-radius: 26px;
+    overflow: visible;
+  }
+
+  .showcase-image {
+    height: 240px;
+    min-height: 240px;
+  }
+
+  .showcase-image img {
+    max-height: 220px;
+  }
+
+  .showcase-info {
+    text-align: center;
+  }
+
+  .showcase-info h2 {
+    font-size: 2.4rem;
+  }
+
+  .showcase-info p {
+    font-size: 0.95rem;
+  }
+
+  .character-likes {
+    justify-content: center;
+  }
+}
