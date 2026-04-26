@@ -7,15 +7,6 @@ import Shop from "./pages/Shop";
 import AboutAuthor from "./pages/AboutAuthor";
 import "./App.css";
 
-const pages = {
-  home: <Home />,
-  books: <Books />,
-  adventures: <Adventures />,
-  characters: <Characters />,
-  shop: <Shop />,
-  "about-author": <AboutAuthor />,
-};
-
 const navItems = [
   { id: "home", label: "Home" },
   { id: "books", label: "Books" },
@@ -28,17 +19,30 @@ const navItems = [
 export default function App() {
   const [activePage, setActivePage] = useState(() => {
     const savedPage = localStorage.getItem("aves-active-page");
-    return pages[savedPage] ? savedPage : "home";
+    return navItems.some((item) => item.id === savedPage) ? savedPage : "home";
   });
 
   useEffect(() => {
     localStorage.setItem("aves-active-page", activePage);
   }, [activePage]);
 
+  const pages = {
+    home: <Home onNavigate={setActivePage} />,
+    books: <Books />,
+    adventures: <Adventures />,
+    characters: <Characters />,
+    shop: <Shop />,
+    "about-author": <AboutAuthor />,
+  };
+
   return (
     <div className="app">
       <header className="site-header">
-        <button className="brand-button" onClick={() => setActivePage("home")}>
+        <button
+          type="button"
+          className="brand-button"
+          onClick={() => setActivePage("home")}
+        >
           <img
             src="/assets/brand/aves-adventures-logo-main.png"
             alt="Ave's Adventures"
@@ -49,6 +53,7 @@ export default function App() {
         <nav className="site-nav">
           {navItems.map((item) => (
             <button
+              type="button"
               key={item.id}
               className={`nav-button ${activePage === item.id ? "active" : ""}`}
               onClick={() => setActivePage(item.id)}
@@ -64,6 +69,13 @@ export default function App() {
           {pages[activePage]}
         </div>
       </main>
+
+      <footer className="site-footer">
+        <p>
+          © {new Date().getFullYear()} Ave’s Adventures. Stories, games and
+          characters by Taryn.
+        </p>
+      </footer>
     </div>
   );
 }

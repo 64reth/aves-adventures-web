@@ -42,46 +42,71 @@ const heroSlides = [
 
 const games = [
   {
-  title: "Cake Matcher",
-  text: "Match cakes and score sweet combos!",
-  image: "/assets/characters/cake/cake-character.png",
-  bg: "/assets/games/cake-matcher-bg.png",
-  gameId: "cake-matcher",
-},
-{
-  title: "Rainbow Run",
-  text: "Run, jump and collect stars!",
-  image: "/assets/characters/ave/ave-character.png",
-  bg: "/assets/games/rainbow-run-bg.png",
-  gameId: "rainbow-run",
-},
-{
-  title: "Boba Catch",
-  text: "Catch the falling boba pearls!",
-  image: "/assets/characters/boba/boba-character.png",
-  bg: "/assets/games/boba-catch-bg.png",
-  gameId: "boba-catch",
-},
-{
-  title: "Pancake Panic",
-  text: "Dodge obstacles on the garden path!",
-  image: "/assets/characters/pancake/pancake-character.png",
-  bg: "/assets/games/pancake-panic-bg.png",
-  gameId: "pancake-panic",
-},
+    title: "Cake Matcher",
+    text: "Match cakes and score sweet combos!",
+    image: "/assets/characters/cake/cake-character.png",
+    bg: "/assets/games/cake-matcher-bg.png",
+    gameId: "cake-matcher",
+  },
+  {
+    title: "Rainbow Run",
+    text: "Run, jump and collect stars!",
+    image: "/assets/characters/ave/ave-character.png",
+    bg: "/assets/games/rainbow-run-bg.png",
+    gameId: "rainbow-run",
+  },
+  {
+    title: "Boba Catch",
+    text: "Catch the falling boba pearls!",
+    image: "/assets/characters/boba/boba-character.png",
+    bg: "/assets/games/boba-catch-bg.png",
+    gameId: "boba-catch",
+  },
+  {
+    title: "Pancake Panic",
+    text: "Dodge obstacles on the garden path!",
+    image: "/assets/characters/pancake/pancake-character.png",
+    bg: "/assets/games/pancake-panic-bg.png",
+    gameId: "pancake-panic",
+  },
 ];
 
 const promoLinks = [
-  { icon: "📖", title: "Amazing Books", text: "Fun stories that inspire and entertain!", button: "Shop Now →" },
-  { icon: "🎨", title: "Cute Artwork", text: "Colouring pages and printable fun!", button: "View Art →" },
-  { icon: "🎁", title: "Fun Products", text: "Coming soon! Toys, apparel and more!", button: "Coming Soon →" },
-  { icon: "💌", title: "Stay Connected", text: "Get updates on new books, games and more!", button: "Join the Adventure →" },
+  {
+    icon: "📖",
+    title: "Amazing Books",
+    text: "Fun stories that inspire and entertain!",
+    button: "Shop Now →",
+    page: "shop",
+  },
+  {
+    icon: "🎨",
+    title: "Cute Artwork",
+    text: "Meet the characters and explore the world!",
+    button: "View Characters →",
+    page: "characters",
+  },
+  {
+    icon: "🎁",
+    title: "Fun Products",
+    text: "Books, stories and more from Taryn’s world!",
+    button: "Visit Shop →",
+    page: "shop",
+  },
+  {
+    icon: "💌",
+    title: "Stay Connected",
+    text: "Learn more about the young author behind the stories!",
+    button: "About the Author →",
+    page: "about-author",
+  },
 ];
 
-export default function Home() {
+export default function Home({ onNavigate }) {
   const [activeSlide, setActiveSlide] = useState(0);
-  const slide = heroSlides[activeSlide];
   const [activeGame, setActiveGame] = useState(null);
+
+  const slide = heroSlides[activeSlide];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -95,7 +120,9 @@ export default function Home() {
     <div className="home-page">
       <section
         className="home-hero-card"
-        style={{ backgroundImage: `linear-gradient(90deg, rgba(255, 222, 239, 0.7), rgba(255, 244, 250, 0.45)), url(${slide.bg})` }}
+        style={{
+          backgroundImage: `linear-gradient(90deg, rgba(255, 222, 239, 0.7), rgba(255, 244, 250, 0.45)), url(${slide.bg})`,
+        }}
       >
         <div className="hero-characters">
           <img src={slide.left} alt={slide.leftAlt} className="hero-ave-img" />
@@ -107,15 +134,22 @@ export default function Home() {
           <p>{slide.text}</p>
 
           <div className="hero-actions">
-            <button type="button">🎮 Explore Adventures</button>
-            <button type="button" className="secondary">📖 Shop Books</button>
+            <button onClick={() => onNavigate("adventures")}>
+              🎮 Explore Adventures
+            </button>
+
+            <button
+              className="secondary"
+              onClick={() => onNavigate("shop")}
+            >
+              📖 Shop Books
+            </button>
           </div>
 
           <div className="hero-dots">
             {heroSlides.map((item, index) => (
               <button
                 key={item.leftAlt}
-                type="button"
                 className={activeSlide === index ? "active" : ""}
                 onClick={() => setActiveSlide(index)}
                 aria-label={`Show ${item.leftAlt} slide`}
@@ -126,10 +160,18 @@ export default function Home() {
 
         <div className="hero-book-card">
           <div className="book-badge">NEW BOOK!</div>
-          <img src="/assets/books/gift-of-the-boba-tea-cover.png" alt="Ave's Adventures book" />
+
+          <img
+            src="/assets/books/gift-of-the-boba-tea-cover.png"
+            alt="Ave's Adventures Book"
+          />
+
           <h3>Ave’s Adventures</h3>
           <p>The latest adventure is out now!</p>
-          <button type="button">Buy on Amazon</button>
+
+          <button onClick={() => onNavigate("shop")}>
+            Buy on Amazon
+          </button>
         </div>
       </section>
 
@@ -140,19 +182,29 @@ export default function Home() {
         <div className="game-grid">
           {games.map((game) => (
             <article className="game-card" key={game.title}>
-              <div className="game-image-wrap" style={{ backgroundImage: `url(${game.bg})` }}>
+              <div
+                className="game-image-wrap"
+                style={{ backgroundImage: `url(${game.bg})` }}
+              >
                 <img src={game.image} alt={game.title} />
               </div>
+
               <h3>{game.title}</h3>
               <p>{game.text}</p>
-              <button type="button" onClick={() => setActiveGame(game.gameId)}>
-  🎮 Play
-</button>
+
+              <button onClick={() => setActiveGame(game.gameId)}>
+                🎮 Play
+              </button>
             </article>
           ))}
         </div>
 
-        <button type="button" className="view-all-btn">View All Adventures ☆</button>
+        <button
+          className="view-all-btn"
+          onClick={() => onNavigate("adventures")}
+        >
+          View All Adventures ☆
+        </button>
       </section>
 
       <section className="home-link-strip">
@@ -161,11 +213,18 @@ export default function Home() {
             <span>{item.icon}</span>
             <h3>{item.title}</h3>
             <p>{item.text}</p>
-            <button type="button">{item.button}</button>
+
+            <button onClick={() => onNavigate(item.page)}>
+              {item.button}
+            </button>
           </article>
         ))}
       </section>
-      <GameWindow gameId={activeGame} onClose={() => setActiveGame(null)} />
+
+      <GameWindow
+        gameId={activeGame}
+        onClose={() => setActiveGame(null)}
+      />
     </div>
   );
 }
