@@ -4,7 +4,7 @@ import Books from "./pages/Books";
 import Adventures from "./pages/Adventures";
 import Characters from "./pages/Characters";
 import Shop from "./pages/Shop";
-import AboutAve from "./pages/AboutAve";
+import AboutAuthor from "./pages/AboutAuthor";
 import "./App.css";
 
 const pages = {
@@ -13,7 +13,7 @@ const pages = {
   adventures: <Adventures />,
   characters: <Characters />,
   shop: <Shop />,
-  "about-ave": <AboutAve />,
+  "about-author": <AboutAuthor />,
 };
 
 const navItems = [
@@ -22,7 +22,7 @@ const navItems = [
   { id: "adventures", label: "Adventures" },
   { id: "characters", label: "Characters" },
   { id: "shop", label: "Shop" },
-  { id: "about-ave", label: "About Ave" },
+  { id: "about-author", label: "About the Author" },
 ];
 
 export default function App() {

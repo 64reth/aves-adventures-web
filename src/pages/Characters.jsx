@@ -51,6 +51,62 @@ const characters = [
       "Pancake is excitable, dramatic and always in motion. He wants to be helpful, but usually causes a syrupy mess first.",
     likes: ["Syrup", "Running", "Garden paths", "Big reactions"],
   },
+
+{
+  name: "Lola",
+  age: "Grown-up",
+  role: "The Brilliant Baker",
+  image: "/assets/characters/lola/lola-character.png",
+  colour: "#fb7185",
+  short: "A warm baker who brings love, food and wisdom.",
+  details:
+    "Lola is kind, creative and full of delicious ideas. She inspires Taryn’s dreams of baking and reminds everyone that food can bring people together.",
+  likes: ["Baking", "Cupcakes", "Family", "Helping children"],
+},
+{
+  name: "Adam",
+  age: 20,
+  role: "The Cool Scientist",
+  image: "/assets/characters/adam/adam-character.png",
+  colour: "#60a5fa",
+  short: "Ave’s big brother and the inventor of magical surprises.",
+  details:
+    "Adam is clever, calm and always experimenting. His science skills help bring magical ideas to life, including the special boba tea that became Ave’s first friend.",
+  likes: ["Science", "Experiments", "Helping Ave", "Inventing"],
+},
+{
+  name: "Taco",
+  age: "Freshly Delivered",
+  role: "The Crazy Helper",
+  image: "/assets/characters/taco/taco-character.png",
+  colour: "#f97316",
+  short: "A wild taco with big energy and even bigger ideas.",
+  details:
+    "Taco is excitable, funny and always trying to help. He means well, but his carelessness often turns simple jobs into big messy adventures.",
+  likes: ["Taco night", "Helping", "Running around", "Big surprises"],
+},
+{
+  name: "Cake",
+  age: "Sweet Magic",
+  role: "The Celebration Friend",
+  image: "/assets/characters/cake/cake-character.png",
+  colour: "#f9a8d4",
+  short: "A cheerful cake who brings party energy everywhere.",
+  details:
+    "Cake is bright, sweet and full of celebration. Wherever Cake goes, things feel more joyful, colourful and fun.",
+  likes: ["Parties", "Sprinkles", "Dancing", "Making people smile"],
+},
+{
+  name: "Bobby",
+  age: 11,
+  role: "Zara’s Little Brother",
+  image: "/assets/characters/bobby/bobby-character.png",
+  colour: "#38bdf8",
+  short: "Curious, playful and always ready to join the adventure.",
+  details:
+    "Bobby is Zara’s younger brother. He brings playful energy, big questions and a brave spirit to the group, even when things get strange or silly.",
+  likes: ["Blue outfits", "Games", "Exploring", "Following Zara"],
+},
 ];
 
 export default function Characters() {
@@ -61,7 +117,6 @@ export default function Characters() {
       <div className="floating-bg">
         <span>☁️</span>
         <span>⭐</span>
-        <span>🌈</span>
         <span>✨</span>
         <span>☁️</span>
         <span>⭐</span>
@@ -70,6 +125,7 @@ export default function Characters() {
       <section className="characters-panel">
         <h1>Characters</h1>
         <p>Tap a card to reveal their adventure profile.</p>
+        <p>Character count: {characters.length}</p>
 
         <div className="characters-grid">
           {characters.map((character) => (
