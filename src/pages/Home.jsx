@@ -47,6 +47,7 @@ const games = [
     image: "/assets/characters/cake/cake-character.png",
     bg: "/assets/games/cake-matcher-bg.png",
     gameId: "cake-matcher",
+    badge: "NEW",
   },
   {
     title: "Rainbow Run",
@@ -54,6 +55,7 @@ const games = [
     image: "/assets/characters/ave/ave-character.png",
     bg: "/assets/games/rainbow-run-bg.png",
     gameId: "rainbow-run",
+    badge: "HOT",
   },
   {
     title: "Boba Catch",
@@ -61,6 +63,7 @@ const games = [
     image: "/assets/characters/boba/boba-character.png",
     bg: "/assets/games/boba-catch-bg.png",
     gameId: "boba-catch",
+    badge: "FUN",
   },
   {
     title: "Pancake Panic",
@@ -68,6 +71,7 @@ const games = [
     image: "/assets/characters/pancake/pancake-character.png",
     bg: "/assets/games/pancake-panic-bg.png",
     gameId: "pancake-panic",
+    badge: "FAST",
   },
 ];
 
@@ -121,7 +125,7 @@ export default function Home({ onNavigate }) {
       <section
         className="home-hero-card"
         style={{
-          backgroundImage: `linear-gradient(90deg, rgba(255, 222, 239, 0.7), rgba(255, 244, 250, 0.45)), url(${slide.bg})`,
+          backgroundImage: `linear-gradient(90deg, rgba(255, 222, 239, 0.72), rgba(255, 244, 250, 0.48)), url(${slide.bg})`,
         }}
       >
         <div className="hero-characters">
@@ -130,19 +134,17 @@ export default function Home({ onNavigate }) {
         </div>
 
         <div className="hero-copy">
+          <span className="hero-kicker">Stories • Games • Imagination</span>
           <h1>{slide.title}</h1>
           <p>{slide.text}</p>
 
           <div className="hero-actions">
             <button onClick={() => onNavigate("adventures")}>
-              🎮 Explore Adventures
+              🎮 Play Free Games
             </button>
 
-            <button
-              className="secondary"
-              onClick={() => onNavigate("shop")}
-            >
-              📖 Shop Books
+            <button className="secondary" onClick={() => onNavigate("shop")}>
+              📖 Read the Books
             </button>
           </div>
 
@@ -163,16 +165,21 @@ export default function Home({ onNavigate }) {
 
           <img
             src="/assets/books/gift-of-the-boba-tea-cover.png"
-            alt="Ave's Adventures Book"
+            alt="The Gift of the Boba Tea book cover"
           />
 
           <h3>Ave’s Adventures</h3>
           <p>The latest adventure is out now!</p>
 
-          <button onClick={() => onNavigate("shop")}>
-            Buy on Amazon
-          </button>
+          <button onClick={() => onNavigate("shop")}>Buy on Amazon</button>
         </div>
+      </section>
+
+      <section className="trust-strip">
+        <div>🌟 Safe Family Fun</div>
+        <div>📚 Inspires Reading</div>
+        <div>🎮 Playful Games</div>
+        <div>✨ Created by a Young Author</div>
       </section>
 
       <section className="adventure-panel">
@@ -182,6 +189,8 @@ export default function Home({ onNavigate }) {
         <div className="game-grid">
           {games.map((game) => (
             <article className="game-card" key={game.title}>
+              <span className="game-badge">{game.badge}</span>
+
               <div
                 className="game-image-wrap"
                 style={{ backgroundImage: `url(${game.bg})` }}
@@ -189,22 +198,26 @@ export default function Home({ onNavigate }) {
                 <img src={game.image} alt={game.title} />
               </div>
 
-              <h3>{game.title}</h3>
-              <p>{game.text}</p>
+              <div className="game-card-content">
+                <h3>{game.title}</h3>
+                <p>{game.text}</p>
 
-              <button onClick={() => setActiveGame(game.gameId)}>
-                🎮 Play
-              </button>
+                <button onClick={() => setActiveGame(game.gameId)}>
+                  🎮 Play
+                </button>
+              </div>
             </article>
           ))}
         </div>
 
-        <button
-          className="view-all-btn"
-          onClick={() => onNavigate("adventures")}
-        >
+        <button className="view-all-btn" onClick={() => onNavigate("adventures")}>
           View All Adventures ☆
         </button>
+      </section>
+
+      <section className="home-section-heading">
+        <h2>Explore Ave’s World</h2>
+        <p>Books, characters, games and magical surprises.</p>
       </section>
 
       <section className="home-link-strip">
@@ -214,17 +227,12 @@ export default function Home({ onNavigate }) {
             <h3>{item.title}</h3>
             <p>{item.text}</p>
 
-            <button onClick={() => onNavigate(item.page)}>
-              {item.button}
-            </button>
+            <button onClick={() => onNavigate(item.page)}>{item.button}</button>
           </article>
         ))}
       </section>
 
-      <GameWindow
-        gameId={activeGame}
-        onClose={() => setActiveGame(null)}
-      />
+      <GameWindow gameId={activeGame} onClose={() => setActiveGame(null)} />
     </div>
   );
 }
