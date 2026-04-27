@@ -2341,3 +2341,162 @@ button {
 .music-toggle {
   flex-shrink: 0;
 }
+
+/* MAGIC ART */
+
+.magic-art-game {
+  min-height: 640px;
+  padding: 28px;
+  background:
+    linear-gradient(rgba(255, 248, 252, 0.78), rgba(255, 248, 252, 0.9)),
+    url("/assets/games/art-studio-bg.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.magic-art-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.magic-art-header h1 {
+  margin: 0;
+  color: #f23b91;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.magic-art-header p {
+  margin: 0;
+  color: #5b316b;
+  font-weight: 800;
+}
+
+.magic-art-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.magic-art-actions button,
+.magic-art-toolbar button {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 14px;
+  background: white;
+  color: #7c3aed;
+  font-weight: 1000;
+  cursor: pointer;
+}
+
+.magic-art-actions button {
+  background: #f23b91;
+  color: white;
+}
+
+.magic-art-layout {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 18px;
+}
+
+.magic-art-toolbar {
+  padding: 16px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 14px 30px rgba(91, 49, 107, 0.14);
+}
+
+.magic-art-toolbar h3 {
+  margin: 12px 0 8px;
+  color: #5b316b;
+}
+
+.magic-art-toolbar button {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.magic-art-toolbar button.active {
+  background: #7c3aed;
+  color: white;
+}
+
+.magic-art-toolbar label {
+  display: block;
+  margin-top: 10px;
+  color: #5b316b;
+  font-weight: 900;
+}
+
+.magic-art-toolbar input {
+  width: 100%;
+}
+
+.magic-colors,
+.magic-stamps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.magic-colors button {
+  aspect-ratio: 1;
+  min-height: 38px;
+  border: 3px solid white;
+  box-shadow: 0 6px 12px rgba(91, 49, 107, 0.12);
+}
+
+.magic-colors button.active,
+.magic-stamps button.active {
+  outline: 4px solid #f23b91;
+}
+
+.magic-stamps button {
+  aspect-ratio: 1;
+  padding: 4px;
+  font-size: 1.25rem;
+}
+
+.magic-art-canvas-wrap {
+  padding: 14px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 18px 40px rgba(91, 49, 107, 0.16);
+}
+
+.magic-art-canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
+  background: white;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+@media (max-width: 800px) {
+  .magic-art-header,
+  .magic-art-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .magic-art-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .magic-art-layout {
+    display: grid;
+  }
+
+  .magic-art-toolbar {
+    order: 2;
+  }
+
+  .magic-art-canvas-wrap {
+    order: 1;
+  }
+}

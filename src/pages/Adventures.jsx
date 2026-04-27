@@ -34,6 +34,14 @@ const games = [
     gameId: "pancake-panic",
     badge: "FAST",
   },
+  {
+  title: "Magic Art Studio",
+  text: "Draw, stamp and sparkle with Zara!",
+  image: "/assets/characters/zara/zara-character.png",
+  bg: "/assets/games/art-studio-bg.png",
+  gameId: "magic-art",
+  badge: "CREATE",
+},
 ];
 
 export default function Adventures() {
