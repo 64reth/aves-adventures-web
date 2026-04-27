@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { playSound } from "../utils/audio";
 
 const cardImages = [
   "/assets/characters/cake/cake-character.png",
@@ -17,8 +18,11 @@ export default function CakeMatcher({ onBack }) {
   const [cards, setCards] = useState([]);
   const [selected, setSelected] = useState([]);
   const [moves, setMoves] = useState(0);
+  const [hasWon, setHasWon] = useState(false);
 
   function startGame() {
+    playSound("start", 0.35);
+
     const deck = shuffle(
       [...cardImages, ...cardImages].map((image, index) => ({
         id: index,
@@ -30,14 +34,28 @@ export default function CakeMatcher({ onBack }) {
     setCards(deck);
     setSelected([]);
     setMoves(0);
+    setHasWon(false);
   }
 
   useEffect(() => {
     startGame();
   }, []);
 
+  useEffect(() => {
+    const complete = cards.length > 0 && cards.every((card) => card.matched);
+
+    if (complete && !hasWon) {
+      playSound("win", 0.55);
+      setHasWon(true);
+    }
+  }, [cards, hasWon]);
+
   function chooseCard(card) {
-    if (selected.length === 2 || card.matched || selected.includes(card.id)) return;
+    if (selected.length === 2 || card.matched || selected.includes(card.id)) {
+      return;
+    }
+
+    playSound("reveal", 0.3);
 
     const nextSelected = [...selected, card.id];
     setSelected(nextSelected);
@@ -50,13 +68,17 @@ export default function CakeMatcher({ onBack }) {
       const second = cards.find((c) => c.id === secondId);
 
       if (first.image === second.image) {
+        playSound("match", 0.45);
+
         setCards((current) =>
           current.map((c) =>
             c.image === first.image ? { ...c, matched: true } : c
           )
         );
+
         setSelected([]);
       } else {
+        playSound("nomatch", 0.35);
         setTimeout(() => setSelected([]), 800);
       }
     }
@@ -74,8 +96,22 @@ export default function CakeMatcher({ onBack }) {
 
         <div className="cake-game-actions">
           <span>Moves: {moves}</span>
-          <button type="button" onClick={startGame}>Restart</button>
-          {onBack && <button type="button" onClick={onBack}>Back</button>}
+
+          <button type="button" onClick={startGame}>
+            Restart
+          </button>
+
+          {onBack && (
+            <button
+              type="button"
+              onClick={() => {
+                playSound("button", 0.35);
+                onBack();
+              }}
+            >
+              Back
+            </button>
+          )}
         </div>
       </div>
 
@@ -92,11 +128,7 @@ export default function CakeMatcher({ onBack }) {
               key={card.id}
               onClick={() => chooseCard(card)}
             >
-              {flipped ? (
-                <img src={card.image} alt="" />
-              ) : (
-                <span>?</span>
-              )}
+              {flipped ? <img src={card.image} alt="" /> : <span>?</span>}
             </button>
           );
         })}

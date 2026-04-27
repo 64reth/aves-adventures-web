@@ -5,6 +5,7 @@ import Adventures from "./pages/Adventures";
 import Characters from "./pages/Characters";
 import Shop from "./pages/Shop";
 import AboutAuthor from "./pages/AboutAuthor";
+import MusicToggle from "./components/MusicToggle";
 import "./App.css";
 
 const navItems = [
@@ -15,6 +16,15 @@ const navItems = [
   { id: "shop", label: "Shop" },
   { id: "about-author", label: "About the Author" },
 ];
+
+const pageMusic = {
+  home: "ave-love.mp3",
+  books: "rainbow-pocket.mp3",
+  adventures: "bubblegum-banger.mp3",
+  characters: "flower-confetti.mp3",
+  shop: "cream-soda.mp3",
+  "about-author": "star-confetti.mp3",
+};
 
 export default function App() {
   const [activePage, setActivePage] = useState(() => {
@@ -81,6 +91,9 @@ export default function App() {
             </button>
           ))}
         </nav>
+
+        <MusicToggle track={pageMusic[activePage]} />
+
       </header>
 
       <main className="site-main">

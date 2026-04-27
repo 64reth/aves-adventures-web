@@ -1,4 +1,13 @@
 import { useEffect, useRef, useState } from "react";
+import { playSound } from "../utils/audio";
+
+const CANVAS_WIDTH = 700;
+const CANVAS_HEIGHT = 500;
+
+const START_SPEED = 1.6;
+const MAX_SPEED = 3;
+const SPEED_RAMP = 0.006;
+const SYRUP_SPEED_BOOST = 0.12;
 
 export default function PancakePanic() {
   const canvasRef = useRef(null);
@@ -10,11 +19,13 @@ export default function PancakePanic() {
   const [status, setStatus] = useState("playing");
 
   useEffect(() => {
+    playSound("start", 0.35);
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    canvas.width = 700;
-    canvas.height = 500;
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
 
     const bg = new Image();
     bg.src = "/assets/games/pancake-panic-bg.png";
@@ -38,13 +49,14 @@ export default function PancakePanic() {
       frame: 0,
       score: 0,
       hearts: 3,
-      speed: 3,
+      speed: START_SPEED,
       status: "playing",
       invincible: 0,
       bgScroll: 0,
+      hasEnded: false,
       player: {
-        x: canvas.width / 2 - 40,
-        y: canvas.height - 120,
+        x: CANVAS_WIDTH / 2 - 40,
+        y: CANVAS_HEIGHT - 120,
         w: 80,
         h: 80,
       },
@@ -90,11 +102,23 @@ export default function PancakePanic() {
       a.y < b.y + b.h &&
       a.y + a.h > b.y;
 
+    const endGame = (nextStatus) => {
+      if (game.hasEnded) return;
+
+      game.hasEnded = true;
+      game.status = nextStatus;
+      setStatus(nextStatus);
+
+      playSound(nextStatus === "won" ? "win" : "gameOver", 0.55);
+    };
+
     const update = () => {
       if (game.status !== "playing") return;
 
       game.frame += 1;
       game.invincible = Math.max(0, game.invincible - 1);
+
+      game.speed = Math.min(MAX_SPEED, game.speed + SPEED_RAMP);
       game.bgScroll += game.speed;
 
       if (keys.current.ArrowLeft || keys.current.a) game.player.x -= 6;
@@ -126,29 +150,34 @@ export default function PancakePanic() {
           h: obs.h * 0.76,
         };
 
-        if (
-          game.invincible === 0 &&
-          rectHit(playerHitbox, obstacleHitbox)
-        ) {
+        if (game.invincible === 0 && rectHit(playerHitbox, obstacleHitbox)) {
+          playSound("collide", 0.45);
+
           game.hearts -= 1;
           game.invincible = 90;
           setHearts(game.hearts);
 
           if (game.hearts <= 0) {
-            game.status = "lost";
-            setStatus("lost");
+            endGame("lost");
           }
         }
       }
 
       for (const drop of game.syrup) {
         if (!drop.collected && rectHit(game.player, drop)) {
-          drop.collected = true;
-          game.score += 5;
-          setScore(Math.floor(game.score));
+          playSound("ok", 0.4);
 
-          if (game.score % 25 === 0) {
-            game.speed += 0.3;
+          drop.collected = true;
+
+          const oldScore = Math.floor(game.score);
+          game.score += 5;
+          const newScore = Math.floor(game.score);
+
+          setScore(newScore);
+
+          if (Math.floor(oldScore / 25) < Math.floor(newScore / 25)) {
+            playSound("boost", 0.35);
+            game.speed = Math.min(MAX_SPEED, game.speed + SYRUP_SPEED_BOOST);
           }
         }
       }
@@ -157,8 +186,7 @@ export default function PancakePanic() {
       setScore(Math.floor(game.score));
 
       if (game.score >= 999) {
-        game.status = "won";
-        setStatus("won");
+        endGame("won");
       }
 
       game.obstacles = game.obstacles.filter((o) => o.y < canvas.height + 120);
@@ -318,6 +346,8 @@ export default function PancakePanic() {
   }, []);
 
   const restart = () => {
+    playSound("start", 0.35);
+
     if (document.activeElement) document.activeElement.blur();
 
     keys.current = {};
@@ -332,12 +362,13 @@ export default function PancakePanic() {
     game.frame = 0;
     game.score = 0;
     game.hearts = 3;
-    game.speed = 3;
+    game.speed = START_SPEED;
     game.status = "playing";
     game.invincible = 0;
     game.bgScroll = 0;
-    game.player.x = 700 / 2 - 40;
-    game.player.y = 500 - 120;
+    game.hasEnded = false;
+    game.player.x = CANVAS_WIDTH / 2 - 40;
+    game.player.y = CANVAS_HEIGHT - 120;
     game.obstacles = [];
     game.syrup = [];
   };

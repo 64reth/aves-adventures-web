@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { playSound } from "../utils/audio";
 
 const GAME_WIDTH = 720;
 const GAME_HEIGHT = 520;
@@ -26,27 +27,52 @@ export default function BobaCatch({ onBack }) {
   const [bobas, setBobas] = useState([]);
   const [score, setScore] = useState(0);
   const [misses, setMisses] = useState(0);
-  const [isHappy, setIsHappy] = useState(false);
   const [playerState, setPlayerState] = useState("idle");
+  const [hasLost, setHasLost] = useState(false);
+
   const keys = useRef({ left: false, right: false });
 
   function restartGame() {
+    playSound("start", 0.35);
+
     setPlayerX(GAME_WIDTH / 2 - PLAYER_WIDTH / 2);
     setBobas([]);
     setScore(0);
     setMisses(0);
-    setIsHappy(false);
+    setPlayerState("idle");
+    setHasLost(false);
   }
 
   useEffect(() => {
+    playSound("start", 0.35);
+  }, []);
+
+  useEffect(() => {
+    if (misses >= 5 && !hasLost) {
+      playSound("lose", 0.55);
+      setHasLost(true);
+    }
+  }, [misses, hasLost]);
+
+  useEffect(() => {
     function keyDown(e) {
-      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") keys.current.left = true;
-      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") keys.current.right = true;
+      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+        keys.current.left = true;
+      }
+
+      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+        keys.current.right = true;
+      }
     }
 
     function keyUp(e) {
-      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") keys.current.left = false;
-      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") keys.current.right = false;
+      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+        keys.current.left = false;
+      }
+
+      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+        keys.current.right = false;
+      }
     }
 
     window.addEventListener("keydown", keyDown);
@@ -59,33 +85,37 @@ export default function BobaCatch({ onBack }) {
   }, []);
 
   useEffect(() => {
-  const spawnTimer = setInterval(() => {
-    setBobas((current) => [...current, makeBoba(score)]);
-  }, 850);
+    if (hasLost) return;
 
-  return () => clearInterval(spawnTimer);
-}, [score]);
+    const spawnTimer = setInterval(() => {
+      setBobas((current) => [...current, makeBoba(score)]);
+    }, 850);
+
+    return () => clearInterval(spawnTimer);
+  }, [score, hasLost]);
 
   useEffect(() => {
+    if (hasLost) return;
+
     const gameLoop = setInterval(() => {
       setPlayerX((x) => {
-  let next = x;
-  let state = "idle";
+        let next = x;
+        let state = "idle";
 
-  if (keys.current.left) {
-    next -= 12;
-    state = "move-left";
-  }
+        if (keys.current.left) {
+          next -= 12;
+          state = "move-left";
+        }
 
-  if (keys.current.right) {
-    next += 12;
-    state = "move-right";
-  }
+        if (keys.current.right) {
+          next += 12;
+          state = "move-right";
+        }
 
-  setPlayerState(state);
+        setPlayerState(state);
 
-  return Math.max(0, Math.min(GAME_WIDTH - PLAYER_WIDTH, next));
-});
+        return Math.max(0, Math.min(GAME_WIDTH - PLAYER_WIDTH, next));
+      });
 
       setBobas((current) => {
         const nextBobas = [];
@@ -121,15 +151,30 @@ export default function BobaCatch({ onBack }) {
         });
 
         if (caught > 0) {
-          setScore((s) => s + caught);
+          playSound("collect", 0.4);
+
+          setScore((currentScore) => {
+            const nextScore = currentScore + caught;
+
+            if (
+              Math.floor(currentScore / SPEED_STEP_EVERY) <
+              Math.floor(nextScore / SPEED_STEP_EVERY)
+            ) {
+              playSound("boost", 0.35);
+            }
+
+            return nextScore;
+          });
+
           setPlayerState("happy");
+
           setTimeout(() => {
-  setIsHappy(false);
-  setPlayerState("idle");
-}, 350);
+            setPlayerState("idle");
+          }, 350);
         }
 
         if (missed > 0) {
+          playSound("bash", 0.3);
           setMisses((m) => m + missed);
         }
 
@@ -138,7 +183,7 @@ export default function BobaCatch({ onBack }) {
     }, 30);
 
     return () => clearInterval(gameLoop);
-  }, [playerX]);
+  }, [playerX, hasLost]);
 
   const gameOver = misses >= 5;
 
@@ -153,8 +198,22 @@ export default function BobaCatch({ onBack }) {
         <div className="boba-game-actions">
           <span>Score: {score}</span>
           <span>Misses: {misses}/5</span>
-          <button type="button" onClick={restartGame}>Restart</button>
-          {onBack && <button type="button" onClick={onBack}>Back</button>}
+
+          <button type="button" onClick={restartGame}>
+            Restart
+          </button>
+
+          {onBack && (
+            <button
+              type="button"
+              onClick={() => {
+                playSound("button", 0.35);
+                onBack();
+              }}
+            >
+              Back
+            </button>
+          )}
         </div>
       </div>
 
@@ -170,18 +229,21 @@ export default function BobaCatch({ onBack }) {
           />
         ))}
 
-     <div
-  className={`boba-player ${playerState}`}
-  style={{
-    left: `${(playerX / GAME_WIDTH) * 100}%`,
-  }}
-/>
+        <div
+          className={`boba-player ${playerState}`}
+          style={{
+            left: `${(playerX / GAME_WIDTH) * 100}%`,
+          }}
+        />
 
         {gameOver && (
           <div className="boba-game-over">
             <h2>Game Over!</h2>
             <p>You caught {score} boba pearls.</p>
-            <button type="button" onClick={restartGame}>Play Again</button>
+
+            <button type="button" onClick={restartGame}>
+              Play Again
+            </button>
           </div>
         )}
       </div>

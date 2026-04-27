@@ -1,4 +1,28 @@
 import { useEffect, useRef, useState } from "react";
+import { playSound } from "../utils/audio";
+
+const CANVAS_WIDTH = 900;
+const CANVAS_HEIGHT = 500;
+
+const START_SPEED = 2.2;
+const GRAVITY = 0.55;
+const JUMP_FORCE = -12;
+const WIN_SCORE = 30;
+const COYOTE_FRAMES = 8;
+
+const CHECKPOINTS = [
+  { score: 10, label: "Checkpoint 1!" },
+  { score: 20, label: "Checkpoint 2!" },
+];
+
+function makeSafePlatform() {
+  return {
+    x: 0,
+    y: 420,
+    w: 560,
+    h: 80,
+  };
+}
 
 export default function RainbowRun() {
   const canvasRef = useRef(null);
@@ -12,11 +36,13 @@ export default function RainbowRun() {
   const [status, setStatus] = useState("playing");
 
   useEffect(() => {
+    playSound("start", 0.35);
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    canvas.width = 900;
-    canvas.height = 500;
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
 
     const aveSprite = new Image();
     aveSprite.src = "/assets/characters/ave/ave-sprite-sheet.png";
@@ -29,11 +55,17 @@ export default function RainbowRun() {
     const game = {
       score: 0,
       hearts: 3,
-      speed: 3,
-      gravity: 0.7,
+      speed: START_SPEED,
+      gravity: GRAVITY,
       status: "playing",
       invincible: 0,
       frame: 0,
+      coyoteTime: 0,
+      checkpointScore: 0,
+      checkpointMessage: "",
+      checkpointMessageTimer: 0,
+      reachedCheckpoints: new Set(),
+      hasEnded: false,
       player: {
         x: 120,
         y: 330,
@@ -168,21 +200,78 @@ export default function RainbowRun() {
       return dx * dx + dy * dy < s.r * s.r;
     };
 
+    const respawnPlayerSafely = () => {
+      game.player.x = 120;
+      game.player.y = 330;
+      game.player.vy = 0;
+      game.player.grounded = true;
+      game.coyoteTime = COYOTE_FRAMES;
+      game.invincible = 120;
+
+      game.platforms.unshift(makeSafePlatform());
+
+      game.platforms = game.platforms.filter((platform, index) => {
+        if (index === 0) return true;
+        return platform.x + platform.w > -50;
+      });
+    };
+
+    const endGame = (nextStatus) => {
+      if (game.hasEnded) return;
+
+      game.hasEnded = true;
+      game.status = nextStatus;
+      setStatus(nextStatus);
+
+      playSound(nextStatus === "won" ? "win" : "lose", 0.55);
+    };
+
+    const loseHeart = () => {
+      game.hearts -= 1;
+      setHearts(game.hearts);
+
+      if (game.hearts <= 0) {
+        endGame("lost");
+      } else {
+        playSound("collide", 0.4);
+        respawnPlayerSafely();
+      }
+    };
+
+    const checkCheckpoint = () => {
+      for (const checkpoint of CHECKPOINTS) {
+        if (
+          game.score >= checkpoint.score &&
+          !game.reachedCheckpoints.has(checkpoint.score)
+        ) {
+          game.reachedCheckpoints.add(checkpoint.score);
+          game.checkpointScore = checkpoint.score;
+          game.checkpointMessage = checkpoint.label;
+          game.checkpointMessageTimer = 120;
+
+          playSound("boost", 0.4);
+        }
+      }
+    };
+
     const update = () => {
       if (game.status !== "playing") return;
 
       game.frame += 1;
       game.invincible = Math.max(0, game.invincible - 1);
+      game.checkpointMessageTimer = Math.max(0, game.checkpointMessageTimer - 1);
 
       if (keys.current.ArrowLeft || keys.current.a) game.player.x -= 5;
       if (keys.current.ArrowRight || keys.current.d) game.player.x += 5;
 
       if (
         (keys.current.ArrowUp || keys.current.w || keys.current[" "]) &&
-        game.player.grounded
+        (game.player.grounded || game.coyoteTime > 0)
       ) {
-        game.player.vy = -14;
+        playSound("jump", 0.35);
+        game.player.vy = JUMP_FORCE;
         game.player.grounded = false;
+        game.coyoteTime = 0;
       }
 
       game.player.x = Math.max(20, Math.min(canvas.width - 80, game.player.x));
@@ -206,6 +295,12 @@ export default function RainbowRun() {
         }
       }
 
+      if (game.player.grounded) {
+        game.coyoteTime = COYOTE_FRAMES;
+      } else {
+        game.coyoteTime = Math.max(0, game.coyoteTime - 1);
+      }
+
       const lastPlatform = game.platforms[game.platforms.length - 1];
 
       if (lastPlatform.x < canvas.width - 250) {
@@ -220,55 +315,43 @@ export default function RainbowRun() {
       game.platforms = game.platforms.filter((p) => p.x + p.w > -50);
 
       if (game.frame % 75 === 0) spawnStar();
-      if (game.frame % 140 === 0) spawnCloud();
+      if (game.frame % 190 === 0) spawnCloud();
 
       for (const star of game.stars) star.x -= game.speed;
       for (const cloud of game.clouds) cloud.x -= game.speed + 1;
 
       for (const star of game.stars) {
         if (!star.collected && circleHit(game.player, star)) {
+          playSound("collect", 0.4);
+
           star.collected = true;
           game.score += 1;
 
           if (game.score % 10 === 0) {
+            playSound("boost", 0.35);
             game.speed *= 1.01;
           }
 
           setScore(game.score);
+          checkCheckpoint();
         }
       }
 
       for (const cloud of game.clouds) {
         if (game.invincible === 0 && rectHit(game.player, cloud)) {
-          game.hearts -= 1;
+          playSound("cloud", 0.35);
           game.invincible = 90;
-          setHearts(game.hearts);
-
-          if (game.hearts <= 0) {
-            game.status = "lost";
-            setStatus("lost");
-          }
+          loseHeart();
         }
       }
 
       if (game.player.y > canvas.height + 80) {
-        game.hearts -= 1;
-        setHearts(game.hearts);
-
-        game.player.x = 120;
-        game.player.y = 240;
-        game.player.vy = 0;
-        game.invincible = 90;
-
-        if (game.hearts <= 0) {
-          game.status = "lost";
-          setStatus("lost");
-        }
+        game.invincible = 120;
+        loseHeart();
       }
 
-      if (game.score >= 30) {
-        game.status = "won";
-        setStatus("won");
+      if (game.score >= WIN_SCORE) {
+        endGame("won");
       }
 
       game.stars = game.stars.filter((s) => s.x > -40 && !s.collected);
@@ -309,6 +392,18 @@ export default function RainbowRun() {
       ctx.font = "bold 24px sans-serif";
       ctx.fillText(`Score: ${game.score}`, 24, 36);
       ctx.fillText(`Hearts: ${"💖".repeat(game.hearts)}`, 170, 36);
+
+      if (game.checkpointMessageTimer > 0) {
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.font = "bold 34px sans-serif";
+        ctx.fillStyle = "#7c3aed";
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 6;
+        ctx.strokeText(game.checkpointMessage, canvas.width / 2, 88);
+        ctx.fillText(game.checkpointMessage, canvas.width / 2, 88);
+        ctx.restore();
+      }
 
       if (game.status === "won" || game.status === "lost") {
         ctx.fillStyle = "rgba(255,255,255,0.86)";
@@ -368,6 +463,8 @@ export default function RainbowRun() {
   }, []);
 
   const restart = () => {
+    playSound("start", 0.35);
+
     if (document.activeElement) {
       document.activeElement.blur();
     }
@@ -383,10 +480,16 @@ export default function RainbowRun() {
 
     game.score = 0;
     game.hearts = 3;
-    game.speed = 3;
+    game.speed = START_SPEED;
     game.status = "playing";
     game.invincible = 0;
     game.frame = 0;
+    game.coyoteTime = 0;
+    game.checkpointScore = 0;
+    game.checkpointMessage = "";
+    game.checkpointMessageTimer = 0;
+    game.reachedCheckpoints = new Set();
+    game.hasEnded = false;
     game.player.x = 120;
     game.player.y = 330;
     game.player.vy = 0;
@@ -403,9 +506,8 @@ export default function RainbowRun() {
   return (
     <div className="rainbow-run-game">
       <h1 className="rainbow-run-title">Rainbow Run</h1>
-<p className="rainbow-run-credit">
-  Created by Taryn & Dad
-</p>
+
+      <p className="rainbow-run-credit">Created by Taryn & Dad</p>
 
       <p className="rainbow-run-help">
         Move with A/D or arrows. Jump with W, up arrow, or space.
