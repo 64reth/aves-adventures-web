@@ -3,6 +3,8 @@ import BobaCatch from "../games/BobaCatch";
 import RainbowRun from "../games/RainbowRun";
 import PancakePanic from "../games/PancakePanic";
 import MagicArt from "../games/MagicArt";
+import LolasBakingBonanza from "../games/LolasBakingBonanza";
+import ErrorBoundary from "./ErrorBoundary";
 
 const games = {
   "cake-matcher": CakeMatcher,
@@ -10,6 +12,7 @@ const games = {
   "rainbow-run": RainbowRun,
   "pancake-panic": PancakePanic,
   "magic-art": MagicArt,
+  "lolas-baking-bonanza": LolasBakingBonanza,
 };
 
 export default function GameWindow({ gameId, onClose }) {
@@ -24,14 +27,16 @@ export default function GameWindow({ gameId, onClose }) {
           ✕
         </button>
 
-        {GameComponent ? (
-          <GameComponent onBack={onClose} />
-        ) : (
-          <div className="coming-soon-game">
-            <h1>Coming Soon!</h1>
-            <p>This adventure is being built.</p>
-          </div>
-        )}
+        <ErrorBoundary key={gameId}>
+          {GameComponent ? (
+            <GameComponent onBack={onClose} />
+          ) : (
+            <div className="coming-soon-game">
+              <h1>Coming Soon!</h1>
+              <p>This adventure is being built.</p>
+            </div>
+          )}
+        </ErrorBoundary>
       </div>
     </div>
   );

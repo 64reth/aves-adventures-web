@@ -2500,3 +2500,262 @@ button {
     order: 1;
   }
 }
+
+/* LOLA'S BAKING BONANZA */
+
+.lola-baking-game {
+  min-height: 640px;
+  padding: 28px;
+  background:
+    linear-gradient(rgba(255, 248, 252, 0.82), rgba(255, 248, 252, 0.9)),
+    url("/assets/backgrounds/lolas-bakery-bg.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.lola-baking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.lola-baking-header h1 {
+  margin: 0;
+  color: #f23b91;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.lola-baking-header p {
+  margin: 0;
+  color: #5b316b;
+  font-weight: 800;
+}
+
+.lola-baking-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #5b316b;
+  font-weight: 1000;
+}
+
+.lola-baking-actions button,
+.treat-button,
+.bakery-customer,
+.lola-game-over button {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.lola-baking-actions button,
+.lola-game-over button {
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #f23b91;
+  color: white;
+  font-weight: 1000;
+}
+
+.lola-bakery-stage {
+  position: relative;
+  min-height: 500px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+  padding: 22px;
+  border-radius: 30px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.45)),
+    url("/assets/backgrounds/lolas-bakery-bg.png");
+  background-size: cover;
+  background-position: center;
+  border: 5px solid white;
+  box-shadow: 0 20px 45px rgba(91, 49, 107, 0.18);
+}
+
+.lola-counter {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.lola-baker {
+  width: 220px;
+  max-height: 280px;
+  object-fit: contain;
+  align-self: center;
+  filter: drop-shadow(0 18px 20px rgba(91, 49, 107, 0.22));
+}
+
+.treat-tray {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 14px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 12px 30px rgba(91, 49, 107, 0.14);
+}
+
+.treat-button {
+  min-height: 76px;
+  border-radius: 20px;
+  background: #fff0dd;
+  color: #5b316b;
+  font-weight: 1000;
+  box-shadow: 0 8px 18px rgba(91, 49, 107, 0.1);
+}
+
+.treat-button span {
+  display: block;
+  font-size: 2rem;
+}
+
+.treat-button small {
+  display: block;
+  font-size: 0.8rem;
+}
+
+.treat-button.active {
+  background: linear-gradient(135deg, #f23b91, #7c3aed);
+  color: white;
+  transform: scale(1.04);
+}
+
+.customer-lanes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  align-content: center;
+  gap: 16px;
+}
+
+.bakery-customer {
+  min-height: 120px;
+  padding: 14px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #5b316b;
+  text-align: center;
+  box-shadow: 0 12px 28px rgba(91, 49, 107, 0.14);
+  transition: transform 0.2s ease;
+}
+
+.bakery-customer:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.customer-face {
+  display: block;
+  font-size: 2.2rem;
+}
+
+.customer-order {
+  display: block;
+  margin: 6px 0 10px;
+  font-weight: 1000;
+}
+
+.patience-bar {
+  display: block;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #ffe3f1;
+}
+
+.patience-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e, #facc15, #f23b91);
+}
+
+.lola-game-over {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  text-align: center;
+  background: rgba(255, 248, 252, 0.9);
+  color: #5b316b;
+}
+
+.lola-game-over h2 {
+  margin: 0;
+  color: #f23b91;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+}
+
+.lola-game-over p {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 1000;
+}
+
+@media (max-width: 800px) {
+  .lola-baking-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .lola-baking-actions {
+    justify-content: center;
+  }
+
+  .lola-bakery-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .lola-baker {
+    width: 180px;
+  }
+
+  .customer-lanes {
+    grid-template-columns: 1fr;
+  }
+}
+.lola-baking-canvas {
+  display: block;
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 28px;
+  border: 5px solid white;
+  box-shadow: 0 18px 45px rgba(91, 49, 107, 0.2);
+  background: #fff8fc;
+}
+
+.game-error-card {
+  min-height: 420px;
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 40px;
+  color: #5b316b;
+}
+
+.game-error-card h2 {
+  margin: 0;
+  color: #f23b91;
+  font-size: 2rem;
+}
+
+.game-error-card button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 20px;
+  background: #f23b91;
+  color: white;
+  font-weight: 1000;
+  cursor: pointer;
+}

@@ -8,7 +8,7 @@ const games = [
     image: "/assets/characters/cake/cake-character.png",
     bg: "/assets/games/cake-matcher-bg.png",
     gameId: "cake-matcher",
-    badge: "NEW",
+    badge: "PUZZLE",
   },
   {
     title: "Rainbow Run",
@@ -41,6 +41,14 @@ const games = [
   bg: "/assets/games/art-studio-bg.png",
   gameId: "magic-art",
   badge: "CREATE",
+},
+{
+  title: "Lola’s Baking Bonanza",
+  text: "Serve cakes fast in Lola’s busy bakery!",
+  image: "/assets/characters/lola/lola-character.png",
+  bg: "/assets/backgrounds/lolas-bakery-bg.png",
+  gameId: "lolas-baking-bonanza",
+  badge: "NEW",
 },
 ];
 
